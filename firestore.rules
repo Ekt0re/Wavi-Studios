@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regole per i messaggi
+    match /messages/{messageId} {
+      allow read: if false; // Solo l'admin può leggere i messaggi
+      allow create: if true; // Chiunque può inviare un messaggio
+      allow update, delete: if false; // Nessuno può modificare o eliminare i messaggi
+    }
+    
+    // Regole per le prenotazioni
+    match /bookings/{bookingId} {
+      allow read: if true; // Chiunque può vedere gli slot disponibili
+      allow create: if true; // Chiunque può creare una prenotazione
+      allow update: if false; // Solo l'admin può aggiornare lo stato
+      allow delete: if false; // Solo l'admin può cancellare
+    }
+  }
+} 

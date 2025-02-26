@@ -1,0 +1,150 @@
+.success-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: #1a1a1a;
+  color: white;
+
+  .success-container {
+    background-color: #2a2a2a;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+
+    .success-icon {
+      color: #4CAF50;
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .error-icon {
+      color: #ff4d4d;
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      color: #ff4d4d;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+    }
+
+    .order-info {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      text-align: left;
+
+      p {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.9);
+
+        strong {
+          color: rgba(255, 255, 255, 0.6);
+          margin-right: 0.5rem;
+          font-weight: normal;
+        }
+      }
+    }
+
+    .status-message {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      
+      &.pending {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+      }
+      
+      &.processing {
+        background-color: rgba(33, 150, 243, 0.1);
+        color: #2196f3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        
+        &::after {
+          content: '';
+          width: 20px;
+          height: 20px;
+          border: 2px solid #2196f3;
+          border-right-color: transparent;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        }
+      }
+      
+      &.completed {
+        background-color: rgba(76, 175, 80, 0.1);
+        color: #4CAF50;
+      }
+      
+      &.error {
+        background-color: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+      }
+    }
+
+    .back-button {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: normal;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+
+      &:hover {
+        background-color: #ff3333;
+      }
+    }
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 77, 77, 0.1);
+    border-left-color: #ff4d4d;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .success-container {
+      padding: 1.5rem;
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .order-info {
+        padding: 1rem;
+      }
+    }
+  }
+} 

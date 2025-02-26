@@ -1,0 +1,14 @@
+.parallax-section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .parallax-content {
+    width: 100%;
+    will-change: transform;
+  }
+} 

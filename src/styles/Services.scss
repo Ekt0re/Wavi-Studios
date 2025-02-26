@@ -1,0 +1,126 @@
+.services-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #000;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+
+  h1 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #ff4d4d;
+  }
+
+  .service-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    position: sticky;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+    z-index: 10;
+
+    .nav-button {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid #ff4d4d;
+      border-radius: 25px;
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #ff4d4d;
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  .services-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .service-section {
+      min-height: 80vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 4rem;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+        z-index: 1;
+      }
+
+      .service-info {
+        position: relative;
+        z-index: 2;
+        max-width: 500px;
+
+        h2 {
+          color: #ff4d4d;
+          font-size: 3rem;
+          margin-bottom: 1.5rem;
+          text-transform: uppercase;
+        }
+
+        p {
+          margin-bottom: 2rem;
+          font-size: 1.2rem;
+          line-height: 1.6;
+          color: #fff;
+        }
+
+        .service-button {
+          display: inline-block;
+          padding: 1rem 2.5rem;
+          background-color: #ff4d4d;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 25px;
+          font-size: 1.1rem;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+            background-color: #ff3333;
+          }
+        }
+      }
+
+      &:nth-child(even) {
+        &::before {
+          background: linear-gradient(
+            to left,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.5) 100%
+          );
+        }
+
+        .service-info {
+          margin-left: auto;
+        }
+      }
+    }
+  }
+} 

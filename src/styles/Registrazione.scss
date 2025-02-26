@@ -1,0 +1,152 @@
+.registrazione-page {
+  min-height: 100vh;
+  background-color: #000;
+  color: #fff;
+  padding-bottom: 4rem;
+
+  .hero-section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/Assets/Servizi/Img_S_3.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    h1 {
+      font-size: 4rem;
+      color: #ff4d4d;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .prenota-button {
+      padding: 1rem 3rem;
+      font-size: 1.5rem;
+      background-color: #ff4d4d;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+
+      &:hover {
+        transform: translateY(-2px);
+        background-color: #ff3333;
+        box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+      }
+    }
+  }
+
+  .info-section {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .info-content {
+      h2 {
+        color: #ff4d4d;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .studio-image {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        border-radius: 15px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  }
+
+  .faq-section {
+    padding: 4rem 2rem;
+    background-color: rgba(255, 255, 255, 0.05);
+
+    h2 {
+      color: #ff4d4d;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+
+      .faq-item {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+
+        h3 {
+          color: #ff4d4d;
+          font-size: 1.3rem;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+
+  .contact-section {
+    padding: 4rem 2rem;
+    text-align: center;
+
+    h2 {
+      color: #ff4d4d;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-button {
+      display: inline-block;
+      padding: 1rem 3rem;
+      font-size: 1.3rem;
+      background-color: transparent;
+      color: #ff4d4d;
+      border: 2px solid #ff4d4d;
+      border-radius: 30px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #ff4d4d;
+        color: #fff;
+        transform: translateY(-2px);
+      }
+    }
+  }
+} 

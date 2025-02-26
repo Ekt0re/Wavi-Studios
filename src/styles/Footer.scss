@@ -1,0 +1,91 @@
+.footer {
+  background: rgba(0, 0, 0, 0.98);
+  color: #fff;
+  padding: 4rem 2rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  .footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+    margin-bottom: 3rem;
+
+    .footer-section {
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #ff4d4d;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(45deg, #fff, #ff4d4d);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      h4 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #ff4d4d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.8;
+      }
+
+      nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+
+        a {
+          color: rgba(255, 255, 255, 0.7);
+          transition: all 0.3s ease;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          position: relative;
+          width: fit-content;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: linear-gradient(45deg, #ff4d4d, #ff8080);
+            transition: width 0.3s ease;
+          }
+
+          &:hover {
+            color: #ff4d4d;
+            transform: translateX(5px);
+
+            &::after {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+    p {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+  }
+} 
