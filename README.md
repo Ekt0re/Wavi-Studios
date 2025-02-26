@@ -1,5 +1,7 @@
+(Gestione cartelle principali) 
 
-/Wavi-Studios (Gestione cartelle principali)
+
+/ Wavi-Studios  
 │── /src                        # Codice sorgente principale  
 │   │── /controllers            # Gestione delle logiche delle API  
 │   │── /routes                 # Definizione delle rotte API  
