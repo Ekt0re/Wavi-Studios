@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import '../styles/Services.scss';
@@ -31,6 +31,11 @@ const services = [
 ];
 
 const Services = () => {
+  // Scroll to top when the component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="services-page">
       <h1>SERVIZI</h1>

@@ -6,24 +6,26 @@ const cors = require('cors');
 const archiver = require('archiver');
 const mongoose = require('mongoose');
 const stripe = require('stripe')('sk_test_51Qt8XMR4ikOicVEGYBPF0hSvy4AbUGhfwVszXsBwWSXWmfSxz1bwbHQvKsZn2kuYqyyxUndY1Z8U5ekB90UdZ4gD00yvWKTbhy'); // Chiave privata di test
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
+const logger = require('./src/utils/logger');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+// Modificata configurazione della porta per compatibilità cross-platform
+const PORT = process.env.SERVER_PORT || 3002;
 
 // Connessione a MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log('Connesso a MongoDB');
-}).catch(err => {
-  console.error('Errore di connessione a MongoDB:', err);
-});
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('Connesso a MongoDB');
+  })
+  .catch(err => {
+    console.error('Errore di connessione a MongoDB:', err);
+  });
 
 // Middleware per il logging delle richieste
 app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  logger.info(`${req.method} ${req.url}`);
   next();
 });
 
@@ -32,13 +34,16 @@ const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? ['https://tuo-dominio.com']
     : ['http://localhost:3000', 'http://localhost:3001'],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
+
+// Middleware per i cookie
+app.use(cookieParser());
 
 // Middleware per il parsing del body
 app.use(express.json());
@@ -411,11 +416,61 @@ app.post('/checkout', (req, res) => {
     res.status(200).json({ message: 'Pagamento effettuato con successo' });
 });
 
-// Importa e usa le rotte di autenticazione
-const authRoutes = require('./routes/auth');
+// Endpoint per health check
+app.get('/api/health-check', (req, res) => {
+  try {
+    // Verifica la connessione al database
+    const isDbConnected = mongoose.connection.readyState === 1;
+    
+    return res.status(200).json({
+      status: 'ok',
+      message: 'Server funzionante',
+      dbConnected: isDbConnected,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logger.error('Errore nell\'health check:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'Errore nell\'health check',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Importa le rotte
+const authRoutes = require('./src/routes/authRoutes');
+const paymentRoutes = require('./src/routes/paymentRoutes');
+
+// Usa le rotte
 app.use('/api/auth', authRoutes);
+app.use('/api/payments', paymentRoutes);
+
+// Middleware per la gestione degli errori
+app.use((err, req, res, next) => {
+  // Log dell'errore
+  logger.error('Errore del server:', err);
+  
+  // Determina codice di stato HTTP
+  const statusCode = err.statusCode || 500;
+  
+  // Prepara il messaggio di errore
+  const errorResponse = {
+    status: 'error',
+    message: err.message || 'Errore interno del server',
+  };
+  
+  // Aggiungi dettagli solo in ambiente di sviluppo
+  if (process.env.NODE_ENV === 'development') {
+    errorResponse.stack = err.stack;
+    errorResponse.details = err.details || null;
+  }
+  
+  // Invia risposta al client
+  res.status(statusCode).json(errorResponse);
+});
 
 // Avvio server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server avviato su http://localhost:${PORT}`);
 });

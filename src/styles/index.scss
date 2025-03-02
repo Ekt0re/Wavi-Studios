@@ -1,14 +1,19 @@
+@use 'sass:meta';
+@use 'sass:color';
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 :root {
   --primary-color: #ff4d4d;
-  --primary-dark: #ff3333;
+  --primary-dark: #e64040;
   --primary-light: #ff6666;
-  --glass-bg: rgba(17, 17, 17, 0.85);
+  --glass-bg: rgba(0, 0, 0, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-primary: #F1F2F3;
+  --text-secondary: rgba(241, 242, 243, 0.85);
+  --text-muted: rgba(241, 242, 243, 0.6);
+  --background-dark: #000000;
+  --background-light: #121212;
   --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-light));
 }
 
@@ -22,7 +27,7 @@ body {
   font-family: 'Montserrat', sans-serif;
   line-height: 1.6;
   color: var(--text-primary);
-  background: #000;
+  background: var(--background-dark);
   overflow-x: hidden;
 }
 
@@ -40,21 +45,52 @@ main {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
+  color: var(--primary-color);
+  text-shadow: 0 2px 10px rgba(255, 77, 77, 0.2);
+}
+
+.gradient-text {
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 10px rgba(255, 77, 77, 0.2);
 }
 
 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--text-primary);
   transition: all 0.3s ease;
+  
+  &:hover {
+    color: var(--primary-color);
+  }
 }
 
-button {
+button, .button {
   font-family: inherit;
   cursor: pointer;
+  background-color: var(--primary-color);
+  color: var(--text-primary);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+  }
+  
+  &.secondary {
+    background-color: transparent;
+    border: 1px solid var(--text-primary);
+    
+    &:hover {
+      background-color: rgba(241, 242, 243, 0.1);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+    }
+  }
 }
 
 img {

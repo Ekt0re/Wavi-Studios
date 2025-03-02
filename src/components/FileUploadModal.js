@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { uploadService } from '../services/uploadService';
 import { stripeService } from '../services/stripeService';
 import '../styles/FileUploadModal.scss';
@@ -10,7 +10,6 @@ const MAX_SIZE_GB = 2;
 const MAX_SIZE_BYTES = MAX_SIZE_GB * 1024 * 1024 * 1024;
 
 const FileUploadModal = ({ isOpen, onClose }) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const [step, setStep] = useState(1);
   const fileInputRef = useRef(null);
@@ -40,58 +39,51 @@ const FileUploadModal = ({ isOpen, onClose }) => {
     const sessionId = query.get('session_id');
     
     if (sessionId) {
-      handlePaymentCompletion(sessionId);
+      // Definisco la funzione direttamente nell'useEffect per evitare il warning
+      const processPayment = async (sid) => {
+        try {
+          setIsProcessing(true);
+          setError('Verifica del pagamento in corso...');
+
+          const paymentResult = await stripeService.handlePaymentCompletion(sid);
+          
+          if (paymentResult.success) {
+            setError('Pagamento confermato. Caricamento file in corso...');
+            
+            // Recupera i dati dei file salvati
+            const pendingUpload = JSON.parse(localStorage.getItem('pendingUpload'));
+            if (!pendingUpload) {
+              throw new Error('Dati di upload non trovati');
+            }
+            
+            // Aggiungi i file all'oggetto formData
+            const formDataToUpload = new FormData();
+            pendingUpload.files.forEach(file => {
+              formDataToUpload.append('files', file);
+            });
+            
+            // Aggiungi informazioni aggiuntive
+            formDataToUpload.append('email', pendingUpload.email);
+            formDataToUpload.append('sessionId', sid);
+            formDataToUpload.append('customerName', pendingUpload.name || 'Cliente');
+            
+            // Esegui l'upload
+            await uploadService.uploadFiles(formDataToUpload);
+          } else {
+            throw new Error('Verifica del pagamento fallita');
+          }
+        } catch (err) {
+          console.error('Errore nel completamento del pagamento:', err);
+          setError(`Errore: ${err.message}`);
+          setIsProcessing(false);
+        }
+      };
+      
+      processPayment(sessionId);
     }
   }, [location]);
 
-  const handlePaymentCompletion = async (sessionId) => {
-    try {
-      setIsProcessing(true);
-      setError('Verifica del pagamento in corso...');
-
-      const paymentResult = await stripeService.handlePaymentCompletion(sessionId);
-      
-      if (paymentResult.success) {
-        setError('Pagamento confermato. Caricamento file in corso...');
-        
-        // Recupera i dati dei file salvati
-        const pendingUpload = JSON.parse(localStorage.getItem('pendingUpload'));
-        if (!pendingUpload) {
-          throw new Error('Dati di upload non trovati');
-        }
-
-        // Prepara i dati per l'upload
-        const uploadData = new FormData();
-        formData.files.forEach(file => {
-          uploadData.append('files', file);
-        });
-        uploadData.append('email', pendingUpload.email);
-        uploadData.append('sessionId', sessionId);
-        uploadData.append('customerName', pendingUpload.nome);
-
-        // Carica i file
-        const uploadResult = await uploadService.uploadFiles(uploadData);
-        
-        if (!uploadResult.success) {
-          throw new Error('Errore durante il caricamento dei file');
-        }
-
-        // Pulisci i dati pendenti
-        localStorage.removeItem('pendingUpload');
-        
-        navigate('/success');
-      } else {
-        throw new Error('Pagamento non riuscito');
-      }
-    } catch (error) {
-      console.error('Errore nella gestione del pagamento:', error);
-      setError('Errore nella verifica del pagamento. Riprova.');
-      navigate('/cancel');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
+  // eslint-disable-next-line no-unused-vars
   const handleFileUpload = async () => {
     if (!formData.files.length) return;
 
@@ -209,7 +201,9 @@ const FileUploadModal = ({ isOpen, onClose }) => {
   };
 
   const handleAddMoreFiles = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleServiceSelect = (serviceId) => {

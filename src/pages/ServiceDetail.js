@@ -3,7 +3,6 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import BookingModal from '../components/BookingModal';
 import CalendlyModal from '../components/CalendlyModal';
-import FileUploadModal from '../components/FileUploadModal';
 import MixMasterModal from '../components/FileUploadModal';
 import BeatCustomModal from '../components/BeatCustomModal';
 import '../styles/ServiceDetail.scss';
@@ -59,7 +58,6 @@ const serviceDetails = {
 const ServiceDetail = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [isCalendlyModalOpen, setIsCalendlyModalOpen] = useState(false);
-  const [isFileUploadModalOpen, setIsFileUploadModalOpen] = useState(false);
   const [isMixMasterModalOpen, setIsMixMasterModalOpen] = useState(false);
   const [isBeatCustomModalOpen, setIsBeatCustomModalOpen] = useState(false);
   const { id } = useParams();
@@ -81,11 +79,6 @@ const ServiceDetail = () => {
     } else {
       setIsBookingModalOpen(true);
     }
-  };
-
-  const handleBeatCustomSubmit = (formData) => {
-    console.log('Beat custom form data:', formData);
-    // Qui implementerai la logica per gestire l'ordine
   };
 
   return (

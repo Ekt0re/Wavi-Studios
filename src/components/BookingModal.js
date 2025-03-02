@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/BookingModal.scss';
 
@@ -12,6 +12,14 @@ const BookingModal = ({ isOpen, onClose }) => {
     serviceType: 'recording',
     message: ''
   });
+  
+  // Assicura che il componente sia montato quando si chiamano funzioni come onClose
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +33,23 @@ const BookingModal = ({ isOpen, onClose }) => {
     e.preventDefault();
     // Qui implementeremo la logica di invio
     console.log('Form submitted:', formData);
-    onClose();
+    
+    // Assicurati che onClose venga chiamato in modo sicuro
+    if (isMounted && typeof onClose === 'function') {
+      setTimeout(() => onClose(), 100);
+    }
+  };
+  
+  // Funzione sicura per la chiusura
+  const safeClose = (e) => {
+    // Impedisci che l'evento si propaghi
+    if (e) {
+      e.stopPropagation();
+    }
+    
+    if (isMounted && typeof onClose === 'function') {
+      onClose();
+    }
   };
 
   return (
@@ -37,17 +61,25 @@ const BookingModal = ({ isOpen, onClose }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={safeClose}
+            style={{ pointerEvents: 'auto' }}
           />
           <motion.div
             className="booking-modal"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
+            onClick={(e) => e.stopPropagation()} // Impedisci che i click sul modal si propaghino all'overlay
           >
             <div className="modal-header">
               <h2>Prenota una Sessione</h2>
-              <button className="close-button" onClick={onClose}>&times;</button>
+              <button 
+                className="close-button" 
+                onClick={safeClose}
+                style={{ cursor: 'pointer', zIndex: 2000 }}
+              >
+                &times;
+              </button>
             </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -125,7 +157,11 @@ const BookingModal = ({ isOpen, onClose }) => {
                   rows="4"
                 />
               </div>
-              <button type="submit" className="submit-button">
+              <button 
+                type="submit" 
+                className="submit-button"
+                style={{ cursor: 'pointer', position: 'relative', zIndex: 2000 }}
+              >
                 Prenota Ora
               </button>
             </form>

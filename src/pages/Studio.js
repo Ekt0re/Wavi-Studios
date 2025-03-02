@@ -1,11 +1,31 @@
-import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useTransform } from 'framer-motion';
 import EquipmentGallery from '../components/EquipmentGallery';
 import ParallaxSection from '../components/ParallaxSection';
 import '../styles/Studio.scss';
 
+// Hook personalizzato per sostituire useScroll
+const useCustomScroll = () => {
+  const [scrollYProgress, setScrollYProgress] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const scrollPercent = scrollTop / (docHeight - winHeight);
+      setScrollYProgress(scrollPercent);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  return { scrollYProgress };
+};
+
 const Studio = () => {
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress } = useCustomScroll();
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   const containerVariants = {

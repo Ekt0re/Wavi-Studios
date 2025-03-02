@@ -1,0 +1,47 @@
+// Colors
+$primary-color: #ff4d4d;
+$secondary-color: #F1F2F3;
+$tertiary-color: #F1F2F3;
+$background-dark: #000000;
+$background-light: #121212;
+$text-light: #F1F2F3;
+$text-mid: rgba(241, 242, 243, 0.8);
+$text-dark: rgba(241, 242, 243, 0.6);
+$error-color: #ff4d4d;
+
+// Shadows
+$shadow-sm: 0 4px 8px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 8px 16px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.3);
+
+// Transitions
+$transition-fast: all 0.2s ease;
+$transition-normal: all 0.3s ease;
+$transition-slow: all 0.5s ease;
+
+// Border Radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 15px;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 2rem;
+$spacing-xl: 3rem;
+
+// Font Sizes
+$font-size-xs: 0.75rem; 
+$font-size-sm: 0.875rem;
+$font-size-md: 1rem;
+$font-size-lg: 1.25rem;
+$font-size-xl: 1.5rem;
+$font-size-xxl: 2rem;
+$font-size-title: 2.5rem; 

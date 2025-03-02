@@ -1,30 +1,26 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuth();
-  const location = useLocation();
-
+  const { currentUser, loading } = useAuth();
+  
+  // Mostra un indicatore di caricamento mentre verifichiamo l'autenticazione
   if (loading) {
-    // Puoi mostrare uno spinner o un componente di caricamento qui
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
-      }}>
-        Caricamento...
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Caricamento in corso...</p>
       </div>
     );
   }
-
-  if (!user) {
-    // Reindirizza al login, salvando la posizione corrente
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  
+  // Reindirizza alla pagina di login se non autenticato
+  if (!currentUser) {
+    return <Navigate to="/login" />;
   }
-
+  
+  // Renderizza i componenti figli se l'utente è autenticato
   return children;
 };
 

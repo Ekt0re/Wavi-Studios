@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material';
-import { AuthProvider } from './contexts/AuthContext';
-import Login from './components/Login';
-import Register from './components/Register';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
-import Shop from './pages/Shop';
+// import Shop from './pages/Shop'; // Lo commento perché non è usato
 import Studio from './pages/Studio';
 import Contact from './pages/Contact';
 import ServiceDetail from './pages/ServiceDetail';
@@ -19,17 +18,22 @@ import Services from './pages/Services';
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
 import CustomBeatPayment from './components/CustomBeatPayment';
+import ErrorPage from './pages/ErrorPage';
+import ErrorBoundary from './components/ErrorBoundary';
+import Account from './components/Account/Account';
 import './styles/App.scss';
-import { sendGAEvent, GA_EVENTS } from './utils/analytics';
+import ReactGA from 'react-ga4';
+import { getAuthToken } from './utils/cookieUtils';
+import { useAuth } from './contexts/AuthContext';
 
 // Crea un tema personalizzato
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ff4081',
+      main: '#3f51b5',
     },
     secondary: {
-      main: '#f50057',
+      main: '#303f9f',
     },
   },
   typography: {
@@ -39,19 +43,27 @@ const theme = createTheme({
 
 const App = () => {
   const location = useLocation();
+  const { currentUser } = useAuth();
 
-  React.useEffect(() => {
-    sendGAEvent(GA_EVENTS.PAGE_VIEW, {
-      page_path: location.pathname,
-      page_title: document.title
-    });
-  }, [location]);
+  useEffect(() => {
+    // Verifica se esiste un token valido all'avvio dell'applicazione
+    const token = getAuthToken();
+    
+    // Log per debug
+    console.log('Token trovato all\'avvio:', token ? 'Sì' : 'No');
+    console.log('Utente autenticato:', currentUser ? 'Sì' : 'No');
+    
+    // Invia evento GA per visualizzazione pagina solo in produzione
+    if (process.env.NODE_ENV === 'production') {
+      ReactGA.send({ hitType: "pageview", page: location.pathname });
+    }
+  }, [location, currentUser]);
 
   return (
     <ThemeProvider theme={theme}>
-      <AuthProvider>
+      <ErrorBoundary>
         <ScrollToTop />
-        <Navbar />
+        {location.pathname !== '/login' && location.pathname !== '/register' && <Navbar />}
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -73,10 +85,19 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<ErrorPage statusCode={404} />} />
           </Routes>
         </main>
-        <Footer />
-      </AuthProvider>
+        {location.pathname !== '/login' && location.pathname !== '/register' && <Footer />}
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

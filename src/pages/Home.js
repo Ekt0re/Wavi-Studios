@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import BookingModal from '../components/BookingModal';
 import ParallaxSection from '../components/ParallaxSection';
-import Scene3D from '../components/Scene3D';
 import '../styles/Home.scss';
+
+// Hook personalizzato per sostituire useScroll
+const useCustomScroll = () => {
+  const [scrollYProgress, setScrollYProgress] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const scrollPercent = scrollTop / (docHeight - winHeight);
+      setScrollYProgress(scrollPercent);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  return { scrollYProgress };
+};
 
 const Home = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+  const { scrollYProgress } = useCustomScroll();
+  
+  // Sostituisco useTransform con valori statici o calcoli semplici
+  // poiché useTransform richiede un oggetto MotionValue
+  const opacity = { current: 1 - Math.min(1, scrollYProgress * 5) };
+  const scale = { current: 1 - Math.min(0.05, scrollYProgress * 0.25) };
 
   const [ref, inView] = useInView({
     threshold: 0.3,
@@ -39,7 +61,22 @@ const Home = () => {
   return (
     <div className="home">
       <section className="hero">
-        <Scene3D rotation={0.1} modelType="headphones" />
+        <div className="scene-placeholder" style={{ 
+          position: 'absolute', 
+          left: '50%', 
+          top: '50%', 
+          transform: 'translate(-50%, -50%)',
+          width: '100%', 
+          height: '100vh',
+          zIndex: -1,
+          backgroundColor: '#121212',
+          backgroundImage: 'linear-gradient(135deg, #1a1a1a, #333333)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: 0.8,
+          pointerEvents: 'none'
+        }}>
+        </div>
         <motion.div
           className="hero-content"
           style={{ opacity, scale }}
@@ -53,6 +90,11 @@ const Home = () => {
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
+              style={{ 
+                color: 'var(--primary-color)', 
+                textShadow: '0 2px 10px rgba(255, 77, 77, 0.5)',
+                fontSize: '4rem'
+              }}
             >
               Wavy Studios
             </motion.h1>
@@ -60,6 +102,13 @@ const Home = () => {
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              style={{ 
+                color: 'white', 
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)',
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                marginTop: '1rem'
+              }}
             >
               The Best in the Game
             </motion.p>
@@ -68,21 +117,31 @@ const Home = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 1 }}
+            style={{ position: 'relative', zIndex: 20 }}
           >
-            <motion.button
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 5px 15px rgba(255, 255, 255, 0.2)"
-              }}
-              whileTap={{ scale: 0.95 }}
+            <button
               className="cta-button"
               onClick={() => setIsBookingModalOpen(true)}
+              style={{
+                padding: '1.2rem 3rem',
+                fontSize: '1.2rem',
+                background: 'rgba(255, 77, 77, 0.2)',
+                color: '#fff',
+                border: '2px solid rgba(255, 255, 255, 0.5)',
+                borderRadius: '50px',
+                cursor: 'pointer',
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                fontWeight: '600',
+                position: 'relative',
+                zIndex: 20
+              }}
             >
               Prenota una sessione
-            </motion.button>
+            </button>
           </motion.div>
         </motion.div>
-        <div className="hero-overlay" />
+        <div className="hero-overlay" style={{ pointerEvents: 'none' }} />
       </section>
 
       <ParallaxSection>
