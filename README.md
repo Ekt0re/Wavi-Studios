@@ -38,3 +38,11 @@
 │── .env                        # Variabili d'ambiente (NON caricarlo su GitHub)  
 │── .gitignore                  # File da escludere dal controllo di versione  
 │── README.md                   # Documentazione del progetto  
+
+
+
+Palete cromatica:
+#ff4d4d Titoli, Pulsanti
+#000000 Sfondo, Gradienti, Riempimento.
+#F1F2F3 Testi, Pulsanti non selezionati
+#a23536
