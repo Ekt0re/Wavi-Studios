@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -14,6 +14,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const navRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,8 +30,26 @@ const Navbar = () => {
     setAccountMenuOpen(false);
     setIsOpen(false); // Chiudi anche il menu mobile quando si cambia pagina
   }, [location]);
+  
+  // Aggiungi event listener per chiudere i menu quando si clicca fuori
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setAccountMenuOpen(false);
+        
+        // Non chiudiamo il menu mobile quando si clicca fuori per evitare comportamenti indesiderati
+        // su dispositivi touch. Il menu mobile si chiuderà solo quando si clicca su un link o sull'icona di chiusura.
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleAccountClick = () => {
+    // Rimuovi il focus dopo il click per evitare contorni indesiderati
+    document.activeElement.blur();
+    
     if (currentUser) {
       setAccountMenuOpen(!accountMenuOpen);
     } else {
@@ -55,6 +74,14 @@ const Navbar = () => {
       navigate('/login');
     }
   };
+  
+  const handleMenuToggle = () => {
+    setIsOpen(!isOpen);
+    // Quando apriamo il menu mobile, chiudiamo il menu dell'account se è aperto
+    if (!isOpen && accountMenuOpen) {
+      setAccountMenuOpen(false);
+    }
+  };
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -64,7 +91,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`} ref={navRef}>
       <div className="navbar-container">
         <button 
           className="logo" 
@@ -81,7 +108,7 @@ const Navbar = () => {
           </div>
         </button>
 
-        <div className="menu-icon" onClick={() => setIsOpen(!isOpen)}>
+        <div className="menu-icon" onClick={handleMenuToggle}>
           {isOpen ? <CloseIcon /> : <MenuIcon />}
         </div>
 
@@ -109,6 +136,8 @@ const Navbar = () => {
             <div 
               className={`account-icon ${accountMenuOpen ? 'active' : ''}`} 
               onClick={handleAccountClick}
+              style={{ outline: 'none' }}
+              tabIndex="-1"
             >
               <AccountCircleIcon fontSize="medium" />
               {currentUser && (
@@ -127,10 +156,16 @@ const Navbar = () => {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link to="/account" onClick={() => setAccountMenuOpen(false)}>
+                  <Link to="/account" onClick={() => {
+                    setAccountMenuOpen(false);
+                    setIsOpen(false);
+                  }}>
                     Il Mio Profilo
                   </Link>
-                  <a href="/" onClick={handleLogout}>
+                  <a href="/" onClick={(e) => {
+                    handleLogout(e);
+                    setIsOpen(false);
+                  }}>
                     Logout
                   </a>
                 </motion.div>

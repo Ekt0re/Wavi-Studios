@@ -13,7 +13,7 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-// API URL di base
+// API URL di base - modificato per usare la route auth definita nel server.js
 const API_BASE_URL = 'http://localhost:3002/api/auth';
 
 // Configurazione autenticazione
@@ -141,25 +141,18 @@ export const AuthProvider = ({ children }) => {
   // Registrazione
   const register = async (username, email, password) => {
     try {
-      // Validazione lato client prima dell'invio
-      if (!username || username.length < 3) {
-        throw new Error('Il nome utente deve contenere almeno 3 caratteri');
+      if (!username || !email || !password) {
+        const errorMessage = "Tutti i campi sono richiesti per la registrazione";
+        setAuthError(errorMessage);
+        throw new Error(errorMessage);
       }
-      
-      if (!email || !email.includes('@')) {
-        throw new Error('Email non valida');
-      }
-      
-      if (!password || password.length < 6) {
-        throw new Error('La password deve contenere almeno 6 caratteri');
-      }
-      
-      console.log('AuthContext register chiamato con:', { username, email });
-      setAuthError(null);
       
       // Dati da inviare al server
-      const userData = { username, email, password };
+      const userData = { email, password, name: username };
       console.log('Dati di registrazione inviati:', userData);
+      
+      // Logging completo per debug
+      console.log('JSON stringificato:', JSON.stringify(userData));
       
       const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',

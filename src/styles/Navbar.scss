@@ -168,6 +168,16 @@
         color: $text-light;
         background: transparent;
         height: 100%;
+        border: none;
+        outline: none;
+
+        svg {
+          fill: $text-light;
+          
+          &:hover {
+            fill: $primary-color;
+          }
+        }
 
         &:hover {
           background: transparent;
@@ -187,7 +197,7 @@
 
       .account-dropdown {
         position: absolute;
-        top: calc(51% + 15px); /* Posiziona il dropdown sotto l'account */
+        top: 100%;
         right: 0;
         width: 200px;
         background: rgba($background-dark, 0.95);
@@ -198,7 +208,7 @@
         z-index: 1001;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        margin-top: 0; /* Rimuove il margine superiore */
+        margin-top: 10px;
         transform-origin: top right;
         animation: dropdown-appear 0.2s ease forwards;
 
@@ -284,10 +294,73 @@
         margin-left: 0;
         margin-top: 2rem;
         width: 100%;
+        align-items: center;
+        justify-content: center;
+        
+        .account-icon {
+          width: 100%;
+          justify-content: center;
+          padding: 1rem 0.5rem;
+          border-radius: 8px;
+          background: rgba($primary-color, 0.1);
+          border: none !important;
+          outline: none !important;
+          
+          svg {
+            fill: $text-light;
+            margin-right: 0.5rem;
+          }
+          
+          &:hover {
+            background: rgba($primary-color, 0.2);
+          }
+          
+          .account-name {
+            font-size: 1rem;
+          }
+        }
         
         .account-dropdown {
-          position: relative;
+          position: static;
           width: 100%;
+          margin-top: 1rem;
+          animation: dropdown-appear-mobile 0.3s ease forwards;
+          box-shadow: none;
+          border-radius: 8px;
+          background: transparent;
+          border: none;
+          
+          @keyframes dropdown-appear-mobile {
+            from {
+              opacity: 0;
+              transform: translateY(-5px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          a {
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+            background: rgba($background-dark, 0.8);
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            
+            &:hover {
+              background: rgba($primary-color, 0.15);
+              padding-left: 1rem;
+              transform: translateY(-2px);
+            }
+            
+            &:last-child {
+              margin-bottom: 0;
+              border-bottom: 1px solid rgba($text-light, 0.1);
+            }
+          }
         }
       }
     }

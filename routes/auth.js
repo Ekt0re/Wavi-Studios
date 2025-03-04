@@ -20,6 +20,8 @@ router.post('/register', async (req, res) => {
       body: req.body,
       headers: req.headers['content-type']
     });
+
+    console.log('Contenuto completo req.body:', JSON.stringify(req.body));
     
     const { username, email, password } = req.body;
     
@@ -67,9 +69,17 @@ router.post('/register', async (req, res) => {
       });
     }
 
+    // Validazione finale per garantire che username non sia null
+    if (!username) {
+      console.log('ERRORE CRITICO: username è null o undefined dopo la validazione');
+      return res.status(400).json({ 
+        message: 'Username non può essere vuoto' 
+      });
+    }
+
     // Crea nuovo utente
     const user = new User({ username, email, password });
-    console.log('Creazione nuovo utente...');
+    console.log('Creazione nuovo utente...', { username, email });
     await user.save();
     console.log('Utente creato con successo:', { userId: user._id });
 
