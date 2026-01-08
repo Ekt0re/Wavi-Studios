@@ -1,3 +1,6 @@
+@use "sass:color";
+@import "./_variables.scss";
+
 .error-page {
   display: flex;
   justify-content: center;
@@ -45,7 +48,8 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: darken(#ff4081, 10%);
+      background-color: color.adjust(#ff4081, $lightness: -10%);
+      transform: translateY(-2px);
     }
   }
 } 

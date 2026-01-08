@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   saveAuthToken, 
   removeAuthToken, 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
 
   // Verifica token e rinnova la sessione se necessario
-  const verifyTokenAndRefresh = async (token) => {
+  const verifyTokenAndRefresh = useCallback(async (token) => {
     if (!token) return false;
     
     try {
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Errore verifica token:', error);
       return false;
     }
-  };
+  }, [currentUser]);
 
   // Verifica utente al caricamento
   useEffect(() => {
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     return () => {
       clearInterval(tokenCheckInterval);
     };
-  }, []);
+  }, [verifyTokenAndRefresh]);
 
   // Login
   const login = async (email, password) => {

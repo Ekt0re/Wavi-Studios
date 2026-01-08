@@ -21,7 +21,7 @@ const auth = async (req, res, next) => {
     }
 
     // Aggiungi l'utente alla richiesta
-    req.user = user;
+    req.user = { userId: user._id, email: user.email };
     req.token = token;
     
     next();
@@ -30,4 +30,4 @@ const auth = async (req, res, next) => {
   }
 };
 
-module.exports = auth; 
+module.exports = { auth }; 

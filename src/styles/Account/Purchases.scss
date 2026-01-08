@@ -1,0 +1,155 @@
+@use "sass:color";
+@import "../_variables.scss";
+
+.purchases-container {
+  margin-top: 1.5rem;
+  
+  h2 {
+    margin-bottom: 1.5rem;
+    color: $primary-color;
+    font-size: 1.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .loading-spinner {
+    text-align: center;
+    margin: 2rem 0;
+    color: $text-mid;
+  }
+  
+  .error-message {
+    background-color: rgba($error-color, 0.1);
+    color: $error-color;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .no-purchases {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    
+    p {
+      margin-bottom: 1.5rem;
+      color: $text-mid;
+    }
+    
+    .browse-services-btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      background-color: $primary-color;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: color.adjust($primary-color, $lightness: -5%);
+        transform: translateY(-2px);
+      }
+    }
+  }
+  
+  .purchases-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    
+    .purchase-item {
+      padding: 1.5rem;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+      
+      .purchase-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        
+        h3 {
+          margin: 0;
+          font-size: 1.2rem;
+          color: $text-light;
+        }
+        
+        .purchase-status {
+          padding: 0.35rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          font-weight: 500;
+          
+          &.status-completed {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+          }
+          
+          &.status-pending {
+            background-color: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+          }
+          
+          &.status-failed {
+            background-color: rgba($error-color, 0.2);
+            color: $error-color;
+          }
+          
+          &.status-refunded {
+            background-color: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+          }
+        }
+      }
+      
+      .purchase-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        
+        .detail-item {
+          display: flex;
+          
+          .detail-label {
+            width: 80px;
+            flex-shrink: 0;
+            font-weight: 500;
+            color: $text-mid;
+          }
+          
+          .detail-value {
+            color: $text-light;
+            
+            &.purchase-id {
+              font-family: monospace;
+              background-color: rgba(255, 255, 255, 0.05);
+              padding: 0.1rem 0.4rem;
+              border-radius: 4px;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .purchase-header {
+      flex-direction: column;
+      align-items: flex-start !important;
+      gap: 0.8rem;
+    }
+  }
+} 

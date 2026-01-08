@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const UserSchema = new mongoose.Schema({
+// Evita la ricompilazione del modello se già esiste
+const User = mongoose.models.User || mongoose.model("User", new mongoose.Schema({
   email: { 
     type: String, 
     required: true, 
@@ -28,23 +29,27 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-});
+}));
 
 // Hash della password prima di salvare
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
+if (!User.schema.pre) {
+  User.schema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+    try {
+      const salt = await bcrypt.genSalt(10);
+      this.password = await bcrypt.hash(this.password, salt);
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
+}
 
 // Metodo per confrontare le password
-UserSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
+if (!User.schema.methods.comparePassword) {
+  User.schema.methods.comparePassword = async function(candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+  };
+}
 
-module.exports = mongoose.model("User", UserSchema); 
+module.exports = User; 

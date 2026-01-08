@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const auth = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -23,24 +23,24 @@ router.post('/register', async (req, res) => {
 
     console.log('Contenuto completo req.body:', JSON.stringify(req.body));
     
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
     
     console.log('Dati estratti dalla richiesta:', { 
-      username: username ? `${username.slice(0,3)}...` : 'mancante', 
+      name: name ? `${name.slice(0,3)}...` : 'mancante', 
       email: email ? `${email.slice(0,3)}...` : 'mancante',
       password: password ? 'presente' : 'mancante'
     });
 
     // Validazione dei dati
-    if (!username || !email || !password) {
-      console.log('Validazione fallita: campi mancanti', { username: !!username, email: !!email, password: !!password });
+    if (!name || !email || !password) {
+      console.log('Validazione fallita: campi mancanti', { name: !!name, email: !!email, password: !!password });
       return res.status(400).json({ 
         message: 'Tutti i campi sono obbligatori' 
       });
     }
 
-    if (username.length < 3) {
-      console.log('Validazione fallita: username troppo corto', { length: username.length });
+    if (name.length < 3) {
+      console.log('Validazione fallita: nome troppo corto', { length: name.length });
       return res.status(400).json({ 
         message: 'Il nome utente deve contenere almeno 3 caratteri' 
       });
@@ -55,31 +55,31 @@ router.post('/register', async (req, res) => {
 
     // Verifica se l'utente esiste già
     const existingUser = await User.findOne({ 
-      $or: [{ email }, { username }] 
+      $or: [{ email }, { name }] 
     });
 
     if (existingUser) {
       console.log('Validazione fallita: utente già esistente', { 
         userFound: true,
         emailMatch: existingUser.email === email,
-        usernameMatch: existingUser.username === username
+        nameMatch: existingUser.name === name
       });
       return res.status(400).json({ 
-        message: 'Username o email già in uso' 
+        message: 'Nome o email già in uso' 
       });
     }
 
-    // Validazione finale per garantire che username non sia null
-    if (!username) {
-      console.log('ERRORE CRITICO: username è null o undefined dopo la validazione');
+    // Validazione finale per garantire che name non sia null
+    if (!name) {
+      console.log('ERRORE CRITICO: name è null o undefined dopo la validazione');
       return res.status(400).json({ 
-        message: 'Username non può essere vuoto' 
+        message: 'Nome non può essere vuoto' 
       });
     }
 
     // Crea nuovo utente
-    const user = new User({ username, email, password });
-    console.log('Creazione nuovo utente...', { username, email });
+    const user = new User({ name, email, password });
+    console.log('Creazione nuovo utente...', { name, email });
     await user.save();
     console.log('Utente creato con successo:', { userId: user._id });
 
@@ -101,7 +101,7 @@ router.post('/register', async (req, res) => {
       token,
       user: {
         _id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email
       }
     });
@@ -160,7 +160,7 @@ router.post('/login', async (req, res) => {
       token,
       user: {
         _id: user._id,
-        username: user.username,
+        name: user.name,
         email: user.email
       }
     });

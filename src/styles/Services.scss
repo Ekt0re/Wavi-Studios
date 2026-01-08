@@ -1,3 +1,6 @@
+@use "sass:color";
+@import "./_variables.scss";
+
 .services-page {
   min-height: 100vh;
   padding: 2rem;
@@ -126,4 +129,47 @@
       }
     }
   }
+}
+
+.purchase-button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  margin-left: 1rem;
+  background-color: #FF5722;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: color.adjust(#FF5722, $lightness: -10%);
+    color: white;
+  }
+  
+  &:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  @media (max-width: 768px) {
+    margin-top: 0.8rem;
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.error-message {
+  background-color: rgba(255, 87, 34, 0.1);
+  color: #FF5722;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 5px;
+  text-align: center;
 } 

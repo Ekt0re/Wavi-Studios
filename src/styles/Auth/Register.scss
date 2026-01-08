@@ -1,5 +1,5 @@
 @use "sass:color";
-@import "../variables";
+@import "../_variables.scss";
 
 // Mixin per effetto vetro
 @mixin glass-effect {
@@ -68,7 +68,7 @@
     margin-bottom: 10px;
     text-align: center;
     font-weight: 700;
-    background: linear-gradient(135deg, $primary-color, lighten($primary-color, 20%));
+    background: linear-gradient(135deg, $primary-color, color.adjust($primary-color, $lightness: 20%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 2px 10px rgba(255, 77, 77, 0.3);
@@ -85,7 +85,7 @@
   
   .error-message {
     background-color: rgba($primary-color, 0.2);
-    color: lighten($primary-color, 15%);
+    color: color.adjust($primary-color, $lightness: 15%);
     padding: 12px;
     margin-bottom: 20px;
     border-radius: $border-radius-md;
@@ -96,7 +96,7 @@
   
   .debug-info {
     background-color: rgba($primary-color, 0.1);
-    color: lighten($primary-color, 25%);
+    color: color.adjust($primary-color, $lightness: 25%);
     padding: 15px;
     margin-bottom: 20px;
     border-radius: $border-radius-md;
@@ -126,7 +126,7 @@
     label {
       display: block;
       margin-bottom: 8px;
-      color: $text-light;
+      color: color.adjust($primary-color, $lightness: 15%);
       font-size: $font-size-sm;
       font-weight: 500;
     }
@@ -137,7 +137,7 @@
       border-radius: $border-radius-md;
       border: 1px solid rgba(255, 255, 255, 0.1);
       background: rgba(0, 0, 0, 0.4);
-      color: $text-light;
+      color: color.adjust($primary-color, $lightness: 25%);
       font-size: $font-size-md;
       transition: $transition-normal;
       
@@ -160,7 +160,7 @@
       width: 100%;
       padding: 14px;
       border-radius: $border-radius-md;
-      background: linear-gradient(135deg, $primary-color, lighten($primary-color, 5%));
+      background: linear-gradient(135deg, $primary-color, color.adjust($primary-color, $lightness: 5%));
       color: white;
       font-weight: 600;
       font-size: $font-size-md;
@@ -169,13 +169,13 @@
       transition: $transition-normal;
       
       &:hover {
-        background: linear-gradient(135deg, darken($primary-color, 5%), $primary-color);
+        background: linear-gradient(135deg, color.adjust($primary-color, $lightness: -5%), $primary-color);
         transform: translateY(-2px);
         box-shadow: 0 8px 15px rgba($primary-color, 0.3);
       }
       
       &:disabled {
-        background: linear-gradient(135deg, rgba($primary-color, 0.7), rgba(lighten($primary-color, 5%), 0.7));
+        background: linear-gradient(135deg, rgba($primary-color, 0.7), rgba(color.adjust($primary-color, $lightness: 5%), 0.7));
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
@@ -192,7 +192,7 @@
       margin-bottom: 10px;
       
       a {
-        color: lighten($primary-color, 10%);
+        color: color.adjust($primary-color, $lightness: 10%);
         text-decoration: none;
         font-weight: 500;
         

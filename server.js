@@ -439,12 +439,14 @@ app.get('/api/health-check', (req, res) => {
 });
 
 // Importa le rotte
-const authRoutes = require('./src/routes/authRoutes');
+const authRoutes = require('./routes/auth');
 const paymentRoutes = require('./src/routes/paymentRoutes');
+const purchaseRoutes = require('./routes/purchaseRoutes');
 
 // Usa le rotte
 app.use('/api/auth', authRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/purchases', purchaseRoutes);
 
 // Middleware per la gestione degli errori
 app.use((err, req, res, next) => {

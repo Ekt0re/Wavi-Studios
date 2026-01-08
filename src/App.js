@@ -17,6 +17,8 @@ import PurchaseDetail from './pages/PurchaseDetail';
 import Services from './pages/Services';
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 import CustomBeatPayment from './components/CustomBeatPayment';
 import ErrorPage from './pages/ErrorPage';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -75,6 +77,8 @@ const App = () => {
             <Route path="/beat-custom" element={<CustomBeatPayment />} />
             <Route path="/success" element={<Success />} />
             <Route path="/cancel" element={<Cancel />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route

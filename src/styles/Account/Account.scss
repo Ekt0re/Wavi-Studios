@@ -141,6 +141,49 @@
       }
     }
     
+    .account-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      
+      .tab-button {
+        padding: 0.8rem 1.5rem;
+        background-color: transparent;
+        border: none;
+        color: $text-mid;
+        font-weight: 500;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          color: $text-light;
+        }
+        
+        &.active {
+          color: $primary-color;
+          
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: $primary-color;
+          }
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .tab-button {
+          padding: 0.8rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+    
     .error-message, .success-message {
       padding: 1rem;
       border-radius: 8px;

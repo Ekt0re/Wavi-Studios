@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/Account/Account.scss';
+import Purchases from './Purchases';
 
 const Account = () => {
   const { currentUser, logout, updateUserProfile } = useAuth();
@@ -16,6 +17,7 @@ const Account = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [activeTab, setActiveTab] = useState('profile');
   
   const [userData, setUserData] = useState({
     name: '',
@@ -24,8 +26,8 @@ const Account = () => {
     profileImageUrl: ''
   });
   
-  // Per ora gli ordini saranno vuoti finché l'API non sarà disponibile
-  const [orders, setOrders] = useState([]);
+  // Questa parte verrà implementata quando l'API sarà disponibile
+  // const [orders, setOrders] = useState([]);
   
   useEffect(() => {
     // Reindirizza alla pagina di login se l'utente non è autenticato
@@ -272,18 +274,29 @@ const Account = () => {
           <div className="avatar-container">
             <div className="avatar" onClick={handleAvatarClick}>
               {profileImage ? (
-                <img src={profileImage} alt="Immagine profilo" className="profile-image" />
+                <img 
+                  src={profileImage} 
+                  alt="Profilo" 
+                  className="profile-image"
+                />
               ) : (
-                <span>{userData.name ? userData.name.charAt(0).toUpperCase() : 'E'}</span>
+                <span>{userData.name ? userData.name.charAt(0).toUpperCase() : '?'}</span>
               )}
-              {isUploading && (
-                <div className="upload-overlay">
-                  {uploadProgress > 0 ? `${uploadProgress}%` : 'Caricamento...'}
+              
+              {!isUploading && (
+                <div className="avatar-overlay">
+                  <span className="camera-icon" role="img" aria-label="Cambia immagine profilo">📷</span>
                 </div>
               )}
-              <div className="avatar-overlay">
-                <span className="camera-icon">📷</span>
-              </div>
+              
+              {isUploading && (
+                <div 
+                  className="upload-overlay"
+                  style={{ '--progress': `${uploadProgress}%` }}
+                >
+                  {uploadProgress}%
+                </div>
+              )}
             </div>
             <input 
               type="file" 
@@ -293,9 +306,7 @@ const Account = () => {
               style={{ display: 'none' }} 
             />
           </div>
-          <h1 className="account-title">
-            {editMode ? 'Modifica Profilo' : 'Il Tuo Account'}
-          </h1>
+          <h1 className="account-title">Il tuo account</h1>
         </div>
         
         {error && (
@@ -306,167 +317,190 @@ const Account = () => {
           <div className="success-message">{success}</div>
         )}
         
-        <div className="account-section">
-          <h2>Informazioni</h2>
-          
-          {editMode ? (
-            <form onSubmit={handleSaveProfile}>
-              <div className="form-group">
-                <label htmlFor="name">Nome:</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={userData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="email">Email:</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="phone">Numero di telefono:</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={userData.phone}
-                  onChange={handleInputChange}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label>Immagine del profilo:</label>
-                <div className="profile-image-edit">
-                  <div className="current-image">
-                    {profileImage ? (
-                      <img src={profileImage} alt="Immagine profilo" />
-                    ) : (
-                      <div className="avatar-placeholder">
-                        {userData.name ? userData.name.charAt(0).toUpperCase() : 'E'}
+        {/* Tab di navigazione */}
+        <div className="account-tabs">
+          <button 
+            className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profilo
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'purchases' ? 'active' : ''}`}
+            onClick={() => setActiveTab('purchases')}
+          >
+            Acquisti
+          </button>
+        </div>
+        
+        {/* Sezione profilo */}
+        {activeTab === 'profile' && (
+          <>
+            <div className="account-section">
+              <h2>Informazioni personali</h2>
+              {editMode ? (
+                <form onSubmit={handleSaveProfile}>
+                  <div className="form-group">
+                    <label htmlFor="name">Nome</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={userData.name}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={userData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label htmlFor="phone">Telefono</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={userData.phone || ''}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Immagine profilo</label>
+                    <div className="profile-image-edit">
+                      <div className="current-image">
+                        {profileImage ? (
+                          <img src={profileImage} alt="Profilo" />
+                        ) : (
+                          <div className="avatar-placeholder">
+                            {userData.name ? userData.name.charAt(0).toUpperCase() : '?'}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="image-actions">
+                        <button 
+                          type="button" 
+                          className="change-image-button" 
+                          onClick={handleAvatarClick}
+                        >
+                          Cambia immagine
+                        </button>
+                        
+                        {profileImage && (
+                          <button 
+                            type="button" 
+                            className="remove-image-button" 
+                            onClick={handleRemoveProfileImage}
+                          >
+                            Rimuovi
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="image-info">
+                      <small>Formati supportati: JPG, PNG, GIF (max. 5MB)</small>
+                      <small>L'immagine sarà visibile solo nel tuo profilo</small>
+                    </div>
+                  </div>
+                  
+                  <div className="form-actions">
+                    <button 
+                      type="submit" 
+                      className="save-button"
+                      disabled={loading}
+                    >
+                      {loading ? 'Salvataggio...' : 'Salva modifiche'}
+                    </button>
+                    <button 
+                      type="button" 
+                      className="cancel-button"
+                      onClick={() => {
+                        setEditMode(false);
+                        // Ripristina i dati originali
+                        setUserData({
+                          name: currentUser.name || '',
+                          email: currentUser.email || '',
+                          phone: currentUser.phone || '',
+                          profileImageUrl: currentUser.profileImageUrl || ''
+                        });
+                        
+                        if (currentUser.profileImageUrl) {
+                          setProfileImage(currentUser.profileImageUrl);
+                        } else {
+                          setProfileImage(null);
+                        }
+                      }}
+                    >
+                      Annulla
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <div className="info-display">
+                    <div className="info-item">
+                      <div className="info-label">Nome:</div>
+                      <div className="info-value">{userData.name}</div>
+                    </div>
+                    <div className="info-item">
+                      <div className="info-label">Email:</div>
+                      <div className="info-value">{userData.email}</div>
+                    </div>
+                    {userData.phone && (
+                      <div className="info-item">
+                        <div className="info-label">Telefono:</div>
+                        <div className="info-value">{userData.phone}</div>
                       </div>
                     )}
                   </div>
-                  <div className="image-actions">
+                  
+                  <div className="action-buttons">
                     <button 
-                      type="button" 
-                      className="change-image-button"
-                      onClick={handleAvatarClick}
+                      className="edit-button"
+                      onClick={() => setEditMode(true)}
                     >
-                      Cambia immagine
+                      Modifica profilo
                     </button>
-                    
-                    {profileImage && (
-                      <button 
-                        type="button" 
-                        className="remove-image-button"
-                        onClick={handleRemoveProfileImage}
-                      >
-                        Rimuovi
-                      </button>
-                    )}
+                    <button 
+                      className="delete-button"
+                      onClick={handleDeleteAccount}
+                    >
+                      Elimina account
+                    </button>
                   </div>
-                </div>
-                <div className="image-info">
-                  <small>Dimensione massima: 1MB. Formati supportati: JPG, PNG, GIF.</small>
-                  <small>L'immagine verrà compressa automaticamente.</small>
-                </div>
-              </div>
-              
-              <div className="form-actions">
-                <button 
-                  type="submit" 
-                  className="save-button"
-                  disabled={loading || isUploading}
-                >
-                  {loading ? 'Salvataggio...' : 'Salva Modifiche'}
-                </button>
-                <button 
-                  type="button" 
-                  className="cancel-button"
-                  onClick={() => setEditMode(false)}
-                >
-                  Annulla
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="info-display">
-              <div className="info-item">
-                <span className="info-label">Nome:</span>
-                <span className="info-value">{userData.name}</span>
-              </div>
-              
-              <div className="info-item">
-                <span className="info-label">Email:</span>
-                <span className="info-value">{userData.email}</span>
-              </div>
-              
-              <div className="info-item">
-                <span className="info-label">Numero:</span>
-                <span className="info-value">{userData.phone || 'Non specificato'}</span>
-              </div>
+                </>
+              )}
             </div>
-          )}
-        </div>
+            
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
+          </>
+        )}
         
-        <div className="account-section">
-          <h2>Ordini e Acquisti</h2>
-          {orders && orders.length > 0 ? (
-            <div className="orders-list">
-              {orders.map(order => (
-                <div key={order._id} className="order-item">
-                  <div className="order-header">
-                    <span className="order-id">Ordine #{order._id.substring(0, 8)}</span>
-                    <span className="order-date">{new Date(order.createdAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="order-details">
-                    <span className="order-status">Stato: {order.status}</span>
-                    <span className="order-amount">€{order.amount.toFixed(2)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="no-orders">Non hai ancora effettuato acquisti.</p>
-          )}
-        </div>
-        
-        <div className="account-section">
-          <h2>Altro</h2>
-          <div className="action-buttons">
-            {!editMode && (
-              <button 
-                className="edit-button" 
-                onClick={() => setEditMode(true)}
-              >
-                Modifica
-              </button>
-            )}
-            <button 
-              className="delete-button" 
-              onClick={handleDeleteAccount}
-            >
-              Elimina
-            </button>
-          </div>
-        </div>
+        {/* Sezione acquisti */}
+        {activeTab === 'purchases' && (
+          <Purchases />
+        )}
         
         <div className="back-link">
-          <a href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
-            Torna alla Home
-          </a>
+          <Link to="/">Torna alla home</Link>
         </div>
       </motion.div>
     </div>
